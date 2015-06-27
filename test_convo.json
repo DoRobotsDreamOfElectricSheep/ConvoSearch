@@ -1,17 +1,19 @@
 {
-	conversations: 
-	[
-		{
-			keyword: "apple",
-			date: "06/25/2015"
-		},
-		{
-			keyword: "banana",
-			date: "06/27/2015"
-		},
-		{
-			keyword: "cherry",
-			date: "06/25/2015"
-		}
-	]
+    "documents": [
+        {
+            "id": 0,
+			"name": "Leon Barker",
+			"date": "06/20/2015"
+        },
+        {
+            "id": 1,
+            "name": "Felicia Mathis",
+			"date": "06/25/2015"
+        },
+        {
+            "id": 2,
+            "name": "Adele Fuentes",
+			"date": "06/19/2015"
+        }
+    ]
 }
