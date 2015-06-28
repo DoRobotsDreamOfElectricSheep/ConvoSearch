@@ -4,10 +4,9 @@ var conversationDbAdapter = require('../lib/conversation-db-adapter');
 
 var router = express.Router();
 
-/* GET users listing. */
-router.get('/', function (req, res) {
+router.post('/', function (req, res) {
 
-    var conn = conversationDbAdapter.create();
+    
     
     var conversationStartTime = moment.utc().toDate().toUTCString()
     var conversation = "test convo"
@@ -30,6 +29,20 @@ router.get('/', function (req, res) {
             });
         });
     }); 
+});
+
+router.get('/', function (req, res) {
+    if (!req.query.fromDate || !req.query.toDate || !req.query.keywords)
+        throw new Error("invalid query");
+    
+    var conn = conversationDbAdapter.create();
+    
+    //Get conversations id's that fit time frame
+    conn.getConversations(req.query.fromDate, req.query.toDate, function (err, response) {
+        if (err)
+            throw new Error("Could't get conversations: " + err);
+        //then get chunks that fit ids
+    });
 });
 
 module.exports = router;

@@ -42,11 +42,25 @@ var conversationDbAdapter = function() {
         var updateRequest = new cps.UpdateRequest(document, cb);
         conversationConnection.sendRequest(updateRequest, cb);
     }
+    
+    function getConversations(fromDate, toDate, cb) {
+        if (!fromDate || !toDate)
+            throw new Error("fromDate and toDate must be valid or exist");
+        
+        var q = "<query><id>&gt; 2015-01-01</id></query><docs>20</docs><offset>0</offset><list><document>yes</document></list>";
+        var search_req = new cps.SearchRequest({ query:  '<id> > 2015-06-26</id>' }); //, endTime: '<=' + toDate});
+        search_req.setOrdering(cps.NumericOrdering("id", "asc"));
+        conversationConnection.sendRequest(search_req, cb);
+    }
+    
+    
+    
 
     return {
         createConversation: createConversation,
         endConversation: endConversation,
-        createTextChunk: createTextChunk
+        createTextChunk: createTextChunk,
+        getConversations: getConversations
     };
 };
 
