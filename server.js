@@ -1,10 +1,11 @@
 var wav = require('wav');
-var io = require('socket.io')();
-
+var exp = require('express');
+var http = require('http').Server(exp);
+var io = require('socket.io')(http);
 
 
 console.log("Listening on port " + 9001)
-io.listen(9001);
+
 
 io.on('connection', function(socket){
     console.log("Connected");
@@ -12,3 +13,5 @@ io.on('connection', function(socket){
         console.log(data);
     });
 });
+
+http.listen(9001);
