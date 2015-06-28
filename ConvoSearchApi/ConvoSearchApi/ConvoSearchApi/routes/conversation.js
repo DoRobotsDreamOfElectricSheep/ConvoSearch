@@ -9,18 +9,25 @@ router.get('/', function (req, res) {
 
     var conn = conversationDbAdapter.create();
     
-    var id = moment.utc().toDate().toUTCString()
+    var conversationStartTime = moment.utc().toDate().toUTCString()
     var conversation = "test convo"
 
-    conn.createConversation(id, conversation, function (err, insertResponse) {
+    conn.createConversation(conversationStartTime, function (err, insertResponse) {
         if (err) return console.error(err);
         
-        conversation = conversation + " more convo";
+        var chunkStartTime = moment.utc().toDate().toUTCString();
+        var chunkWords = "this is a chunk";
 
-        conn.updateConversation(id, conversation, function (err, updateResponse) {
+        conn.createTextChunk(chunkStartTime, conversationStartTime, chunkWords, function (err, updateResponse) {
             if (err) return console.error(err);
             
-            //do whatever next
+            //testing end convo here, do real thing later
+            var conversationEndTime = moment.utc().toDate().toUTCString();
+            conn.endConversation(conversationStartTime, conversationEndTime, function (err, endResponse) {
+                if (err) return console.error(err);
+
+                console.log("done with convo " + endResponse);
+            });
         });
     }); 
 });
