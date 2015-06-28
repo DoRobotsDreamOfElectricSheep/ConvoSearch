@@ -2,6 +2,9 @@
     height: 100%;
 }
 
+h4 {
+    margin-top: 0;
+}
 #icon-size-col {
     display: none;
 }
@@ -54,6 +57,9 @@
     color: #ff6a00;
 }
 
+.white {
+    color: white;
+}
 .col-pull-down {
     float: none;
     display: table-cell;
