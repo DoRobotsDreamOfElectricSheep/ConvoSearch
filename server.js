@@ -1,17 +1,11 @@
 var wav = require('wav');
-var exp = require('express');
-var http = require('http').Server(exp);
-var io = require('socket.io')(http);
+var binaryServer = require('binaryjs').BinaryServer;
 
+var server = binaryServer({port: 9001});
 
-console.log("Listening on port " + 9001)
-
-
-io.on('connection', function(socket){
-    console.log("Connected");
-    socket.on('data', function(data) {
-        console.log(data);
+server.on('connection', function(client){
+    console.log('connected');
+    client.on('stream', function(stream, meta){
+        console.log(meta);
     });
 });
-
-http.listen(9001);
