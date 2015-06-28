@@ -1,4 +1,5 @@
 ﻿var cps = require('cps-api');
+var util = require('util');
 
 var conversationDbAdapter = function() {
     var conversationConnection = new cps.Connection('tcp://cloud-us-0.clusterpoint.com:9007', 'First_Test', 'alex.d.nishikawa@gmail.com', 'rfgt&^%ehfkjtrefgF', 'document', 'document/id', { account: 100635 });
@@ -42,11 +43,40 @@ var conversationDbAdapter = function() {
         var updateRequest = new cps.UpdateRequest(document, cb);
         conversationConnection.sendRequest(updateRequest, cb);
     }
+    
+    function getConversations(fromDate, toDate, cb) {
+        if (!fromDate || !toDate)
+            throw new Error("fromDate and toDate must be valid or exist");
+        
+        var query = util.format('<id>%s .. %s</id>',fromDate, toDate );
+        var search_req = new cps.SearchRequest({ query: query }); //, endTime: '<=' + toDate});
+        search_req.setOrdering(cps.NumericOrdering("id", "asc"));
+        conversationConnection.sendRequest(search_req, cb);
+    }
+    
+    function getTextChunks(conversations,words, cb) {
+        if (!conversations || !words)
+            throw new Error("ids must be valid or exist");
+        
+        var query = "<conversationId>{";
+        conversations.forEach(function (con) {
+            query += util.format("(%s)", con.id);
+        });
+        query += "}</conversationId>";
+        
+        query += "<words>" + words + "</words>";
+
+        var search_req = new cps.SearchRequest({ query: query }); //, endTime: '<=' + toDate});
+        search_req.setOrdering(cps.NumericOrdering("id", "asc"));
+        textChunkConnection.sendRequest(search_req, cb);
+    };
 
     return {
         createConversation: createConversation,
         endConversation: endConversation,
-        createTextChunk: createTextChunk
+        createTextChunk: createTextChunk,
+        getConversations: getConversations,
+        getTextChunks: getTextChunks
     };
 };
 

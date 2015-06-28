@@ -4,32 +4,70 @@ var conversationDbAdapter = require('../lib/conversation-db-adapter');
 
 var router = express.Router();
 
-/* GET users listing. */
-router.get('/', function (req, res) {
-
+router.post('/textChunk', function (req, res) {
     var conn = conversationDbAdapter.create();
-    
-    var conversationStartTime = moment.utc().toDate().toUTCString()
-    var conversation = "test convo"
+    var chunkStartTime = moment().valueOf();
+    var chunkWords = req.body.textChunk;
+    var conversationId = req.body.conversationId;
 
-    conn.createConversation(conversationStartTime, function (err, insertResponse) {
+    conn.createTextChunk(chunkStartTime, conversationId, chunkWords, function (err, updateResponse) {
+        if (err) {
+            res.json({ error: err });
+            return;
+        }
+        
+        res.json({ textChunkId: chunkStartTime });
+    });
+});
+
+router.put('/end', function (req, res) {
+    var conn = conversationDbAdapter.create();
+    var conversationEndTime = moment().valueOf();
+    var conversationId = req.body.conversationId;
+    conn.endConversation(conversationId, conversationEndTime, function (err, endResponse) {
         if (err) return console.error(err);
         
-        var chunkStartTime = moment.utc().toDate().toUTCString();
-        var chunkWords = "this is a chunk";
+        res.json({ ended: conversationEndTime });
+    });
+});
 
-        conn.createTextChunk(chunkStartTime, conversationStartTime, chunkWords, function (err, updateResponse) {
-            if (err) return console.error(err);
-            
-            //testing end convo here, do real thing later
-            var conversationEndTime = moment.utc().toDate().toUTCString();
-            conn.endConversation(conversationStartTime, conversationEndTime, function (err, endResponse) {
-                if (err) return console.error(err);
-
-                console.log("done with convo " + endResponse);
-            });
-        });
+router.post('/create', function (req, res) {
+    var conn = conversationDbAdapter.create();
+    var conversationStartTime = moment().valueOf();
+    
+    conn.createConversation(conversationStartTime, function (err, insertResponse) {
+        if (err) {
+            res.json({ error: err });
+            return;
+        }
+        
+        res.json({conversationId: conversationStartTime}); 
     }); 
+});
+
+router.get('/', function (req, res) {
+    if (!req.query.fromDate || !req.query.toDate || !req.query.keywords)
+        throw new Error("invalid query");
+    
+    var conn = conversationDbAdapter.create();
+    //Get conversations id's that fit time frame
+    conn.getConversations(req.query.fromDate, req.query.toDate, function (err, response) {
+        if (err)
+            throw new Error("Could't get conversations: " + err);
+        
+        if (!response.results)
+            res.json([]); 
+
+        conn.getTextChunks(response.results.document, req.query.keywords, function (err, response) {
+            if (!response.results) {
+                res.json([]);
+                return;
+            }
+
+            res.json(response.results.document); 
+        });
+       
+    });
 });
 
 module.exports = router;
