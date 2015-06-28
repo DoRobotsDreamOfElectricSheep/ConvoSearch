@@ -16,10 +16,11 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 
     <link rel="stylesheet" href="css/convo-search.css">
 </head>
-<body class="clearfix">
+<body class="clearfix" ng-app="convoSearchApp" ng-controller="searchResultsController">
     <!--[if lt IE 7]>
         <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -31,21 +32,21 @@
                         <h4>From Date</h4>
                         <div class="input-group date" id='from-date'>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-time green"></span></span>
-                            <input type="text" id="node-life-span" class="form-control" placeholder="Seconds" aria-describedby="basic-addon1">
+                            <input ng-model="searchFilter.fromDate" type="text" id="node-life-span" class="form-control" placeholder="Seconds" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="col-md-2">
                         <h4>To Date</h4>
                         <div class="input-group date" id='to-date'>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-time red"></span></span>
-                            <input type="text" id="green-node-duplication" class="form-control" placeholder="Seconds" aria-describedby="basic-addon1">
+                            <input ng-model="searchFilter.toDate" type="text" id="green-node-duplication" class="form-control" placeholder="Seconds" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="col-md-2">
                         <h4>Keywords</h4>
                         <div class="input-group">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-zoom-in"></span></span>
-                            <input type="text" id="red-node-duplication" class="form-control" placeholder="Keywords" aria-describedby="basic-addon1">
+                            <input ng-model="searchFilter.keywords" type="text" id="red-node-duplication" class="form-control" placeholder="Keywords" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-4  text-center">
@@ -57,39 +58,72 @@
                     <div class="col-md-1 col-md-offset-2">
                         <h4 class="white">Search</h4>
                         <div class="input-group">
-                            <button type="button" id="reset-button" class="btn btn-success">Search</button>
+                            <button ng-click="search()" type="button" id="reset-button" class="btn btn-success">Search</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="container-fluid search-result">
+
+    <div class="container-fluid search-result" ng-repeat="result in searchResults">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-2">
                         <div class="input-group date" id='from-date'>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar green"></span></span>
-                            <input type="text" id="node-life-span" class="form-control" placeholder="Seconds" aria-describedby="basic-addon1">
+                            <input ng-model="result.conversationId" type="text" id="node-life-span" class="form-control" placeholder="Seconds" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="col-md-9">
                         <div class="input-group date" id='to-date'>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-scissors orange"></span></span>
-                            <input type="text" id="green-node-duplication" class="form-control" placeholder="Seconds" aria-describedby="basic-addon1">
+                            <input ng-model="result.words" type="text" id="green-node-duplication" class="form-control" placeholder="Seconds" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="col-md-1">
                         <div class="input-group">
-                            <button class="btn "><span class="glyphicon glyphicon-eye-open blue"></span></button>
-                            
+                            <button class="btn"><span class="glyphicon glyphicon-eye-open blue"></span></button>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 </body>
 </html>
+<script>
+    var app = angular.module('convoSearchApp', []);
+
+    var endpoint = "http://localhost:1337/conversation";
+    app.controller('searchResultsController', function ($scope,$http) {
+        $scope.searchResults = [];
+        $scope.searchFilter = {};
+
+        $scope.search = function () {
+            var url = endpoint + "?toDate=" + $scope.searchFilter.toDate + "&fromDate=" + $scope.searchFilter.fromDate + "&keywords=" + $scope.searchFilter.keywords;
+
+            $http.get(url)
+            .success(function (data) {
+                $scope.searchResults = data;
+                $scope.$apply();
+            })
+            .error(function (response) {
+                handleFailedRequest(response, "createSiteAlert");
+            });
+        };
+
+        $scope.getPrevPageOfSites = function () { $scope.getPageOfSites($scope.sitesTable.page <= 1 ? 1 : --$scope.sitesTable.page); };
+        $scope.getNextPageOfSites = function () { $scope.getPageOfSites(++$scope.sitesTable.page); };
+
+        $scope.getPageOfSites = function(pageNumber) {
+            $http.get(trafficOnboardSitesServiceUrl + "?page=" + pageNumber + "&count=" + $scope.sitesTable.count)
+            .success(function (data) {
+                $scope.sitesTable.rows = data.results;
+                $scope.$apply();
+            })
+            .error(function (response) { handleFailedRequest(response, "getSitesAlert"); });
+        }
+    });
+</script>

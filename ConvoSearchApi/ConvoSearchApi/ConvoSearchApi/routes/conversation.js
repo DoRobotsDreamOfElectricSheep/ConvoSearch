@@ -50,8 +50,10 @@ router.get('/', function (req, res) {
         throw new Error("invalid query");
     
     var conn = conversationDbAdapter.create();
-    //Get conversations id's that fit time frame
-    conn.getConversations(req.query.fromDate, req.query.toDate, function (err, response) {
+    var utcFromDate = moment.utc(new Date(req.query.fromDate)).valueOf();
+    var utcToDaTe = moment.utc(new Date(req.query.toDate)).valueOf();
+
+    conn.getConversations(utcFromDate, utcToDaTe, function (err, response) {
         if (err)
             throw new Error("Could't get conversations: " + err);
         
@@ -63,6 +65,10 @@ router.get('/', function (req, res) {
                 res.json([]);
                 return;
             }
+            
+            response.results.document.forEach(function (i) {
+                i.conversationId = moment(i.conversationId).format();
+            });
 
             res.json(response.results.document); 
         });
