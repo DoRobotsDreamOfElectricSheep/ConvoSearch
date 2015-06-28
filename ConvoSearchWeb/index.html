@@ -14,8 +14,8 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
 
-    <link rel="stylesheet" href="bootstrap/3.3.2/css/bootstrap.min.css" />
-    <script src="bootstrap/3.3.2/js/bootstrap.min.js"></script> 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> 
 
     <link rel="stylesheet" href="css/convo-search.css">
 </head>
@@ -48,20 +48,46 @@
                             <input type="text" id="red-node-duplication" class="form-control" placeholder="Keywords" aria-describedby="basic-addon1">
                         </div>
                     </div>
-                    <div class="col-md-2">
-                        <h4 class="white">Search</h4>
-                        <div class="input-group">
-                            <button type="button" id="reset-button" class="btn btn-success">Search</button>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-md-offset-2 col-sm-4 col-sm-offset-2 text-center">
+                    <div class="col-md-3 col-sm-4  text-center">
                         <h4>Active Search</h4>
                         <div id="control-buttons" class="btn-group" role="group" aria-label="...">
                             <button type="button" id="reset-button" class="btn btn-default"><span class="glyphicon glyphicon-refresh orange"></span></button>
                         </div>
                     </div>
+                    <div class="col-md-1 col-md-offset-2">
+                        <h4 class="white">Search</h4>
+                        <div class="input-group">
+                            <button type="button" id="reset-button" class="btn btn-success">Search</button>
+                        </div>
+                    </div>
                 </div>
-                
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid search-result">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="input-group date" id='from-date'>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar green"></span></span>
+                            <input type="text" id="node-life-span" class="form-control" placeholder="Seconds" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group date" id='to-date'>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-scissors orange"></span></span>
+                            <input type="text" id="green-node-duplication" class="form-control" placeholder="Seconds" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="input-group">
+                            <button class="btn "><span class="glyphicon glyphicon-eye-open blue"></span></button>
+                            
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
