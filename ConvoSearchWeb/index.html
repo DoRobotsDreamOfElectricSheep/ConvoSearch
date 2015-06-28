@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+ <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Convo Search</title>
+    <meta name="description" content="">
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+
+    <link rel="stylesheet" href="bootstrap/3.3.2/css/bootstrap.min.css" />
+    <script src="bootstrap/3.3.2/js/bootstrap.min.js"></script> 
+
+    <link rel="stylesheet" href="css/convo-search.css">
+    <!--<script src="js/convo-search.js"></script>-->
+    <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+    <script>
+        var socket = io("52.26.31.133:3000");
+    </script>
+</head>
+<body class="clearfix">
+    <!--[if lt IE 7]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <div id="filters" class="container-fluid">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <h4>From Date</h4>
+                        <div class="input-group date" id='from-date'>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-time green"></span></span>
+                            <input type="text" id="node-life-span" class="form-control" placeholder="Seconds" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <h4>To Date</h4>
+                        <div class="input-group date" id='to-date'>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-time red"></span></span>
+                            <input type="text" id="green-node-duplication" class="form-control" placeholder="Seconds" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <h4>Keywords</h4>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-zoom-in"></span></span>
+                            <input type="text" id="red-node-duplication" class="form-control" placeholder="Keywords" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-md-offset-4 col-sm-4 col-sm-offset-2 text-center">
+                        <h4>Active Search</h4>
+                        <div id="control-buttons" class="btn-group" role="group" aria-label="...">
+                            <button type="button" id="reset-button" class="btn btn-default"><span class="glyphicon glyphicon-refresh orange"></span></button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</body>
+</html>
