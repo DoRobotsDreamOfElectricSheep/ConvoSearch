@@ -54,8 +54,8 @@ var conversationDbAdapter = function() {
         conversationConnection.sendRequest(search_req, cb);
     }
     
-    function getTextChunks(conversations,cb) {
-        if (!conversations)
+    function getTextChunks(conversations,words, cb) {
+        if (!conversations || !words)
             throw new Error("ids must be valid or exist");
         
         var query = "<conversationId>{";
@@ -63,6 +63,8 @@ var conversationDbAdapter = function() {
             query += util.format("(%s)", con.id);
         });
         query += "}</conversationId>";
+        
+        query += "<words>" + words + "</words>";
 
         var search_req = new cps.SearchRequest({ query: query }); //, endTime: '<=' + toDate});
         search_req.setOrdering(cps.NumericOrdering("id", "asc"));

@@ -56,11 +56,11 @@ router.get('/', function (req, res) {
             throw new Error("Could't get conversations: " + err);
         
         if (!response.results)
-            res.json({}   ); 
+            res.json([]); 
 
-        conn.getTextChunks(response.results.document, function (err, response) {
+        conn.getTextChunks(response.results.document, req.query.keywords, function (err, response) {
             if (!response.results) {
-                res.json({ results: 0 });
+                res.json([]);
                 return;
             }
 
