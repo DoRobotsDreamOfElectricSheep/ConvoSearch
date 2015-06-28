@@ -218,4 +218,4 @@ pip-log.txt
 #Node
 ################
 node_modules/
-.ntvs_analysis
+.ntvs_analysis.dat
